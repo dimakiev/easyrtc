@@ -9071,23 +9071,38 @@ var Easyrtc = function() {
             }
         }
 
-        var streamId = theStream.id || "default";
-        var remoteName = getNameOfRemoteStream(otherUser, streamId) || "default";
-
-        if (!peerConn.liveRemoteStreams[remoteName]) {
-
-            peerConn.remoteStreamIdToName[streamId] = remoteName;
-            peerConn.liveRemoteStreams[remoteName] = true;
-            theStream.streamName = remoteName;
-
-            if (self.streamAcceptor) {
-                self.streamAcceptor(otherUser, theStream, remoteName);
-                //
-                // Inform the other user that the stream they provided has been received.
-                // This should be moved into signalling at some point
-                //
-                self.sendDataWS(otherUser, "easyrtc_streamReceived", {streamName:remoteName},function(){});
-            }
+        // var streamId = theStream.id || "default";
+        // var remoteName = getNameOfRemoteStream(otherUser, streamId) || "default";
+        //
+        // if (!peerConn.liveRemoteStreams[remoteName]) {
+        //
+        //     peerConn.remoteStreamIdToName[streamId] = remoteName;
+        //     peerConn.liveRemoteStreams[remoteName] = true;
+        //     theStream.streamName = remoteName;
+        //
+        //     if (self.streamAcceptor) {
+        //         self.streamAcceptor(otherUser, theStream, remoteName);
+        //         //
+        //         // Inform the other user that the stream they provided has been received.
+        //         // This should be moved into signalling at some point
+        //         //
+        //         self.sendDataWS(otherUser, "easyrtc_streamReceived", {streamName:remoteName},function(){});
+        //     }
+        // }
+        var remoteName = getNameOfRemoteStream(otherUser, theStream.id || "default");
+        if (!remoteName) {
+        remoteName = "default";
+        }
+        peerConn.remoteStreamIdToName[theStream.id || "default"] = remoteName;
+        peerConn.liveRemoteStreams[remoteName] = true;
+        theStream.streamName = remoteName;
+        if (self.streamAcceptor) {
+          self.streamAcceptor(otherUser, theStream, remoteName);
+        //
+        // Inform the other user that the stream they provided has been received.
+        // This should be moved into signalling at some point
+        //
+          self.sendDataWS(otherUser, "easyrtc_streamReceived", {streamName:remoteName},function(){});
         }
     }
 
