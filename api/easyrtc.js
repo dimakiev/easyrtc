@@ -11410,11 +11410,13 @@ return new Easyrtc();
 
 
         function getCallerOfVideo(videoObject) {
-            return videoIdToCallerMap[videoObject.id];
+          return videoObject && videoIdToCallerMap[videoObject.id];
         }
 
         function setCallerOfVideo(videoObject, callerEasyrtcId) {
+          if (videoObject) {
             videoIdToCallerMap[videoObject.id] = callerEasyrtcId;
+          }
         }
 
         function videoIsFree(obj) {
